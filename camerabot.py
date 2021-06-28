@@ -14,7 +14,6 @@ motor1_ena = 32
 GPIO.setup(motor1_dir, GPIO.OUT)
 GPIO.setup(motor1_stp, GPIO.OUT)
 GPIO.setup(motor1_ena, GPIO.OUT)
-updateEnableState1(True)
 
 # Motor1 for Up/Down Movement
 motor2_dir = 33
@@ -23,7 +22,6 @@ motor2_ena = 36
 GPIO.setup(motor2_dir, GPIO.OUT)
 GPIO.setup(motor2_stp, GPIO.OUT)
 GPIO.setup(motor2_ena, GPIO.OUT)
-updateEnableState2(True)
 
 # Motors Steps Per Revolution
 motor_spr = 200
@@ -95,7 +93,10 @@ def move_up():
 def move_down():
   print("MOVE DOWN")
   driveMotor2(True, 1000, 25)
-  
+
+updateEnableState1(True)
+updateEnableState2(True)
+
 camera = PiCamera()
 
 camera.video_stabilization = True
