@@ -1,21 +1,100 @@
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BOARD)
 from picamera import PiCamera
 from time import sleep
 from tkinter import *
 
-screen_width = 1920
-screen_height = 1080
+screen_width = 1024
+screen_height = 600
 
+# Motor1 for Left/Right Movement
+motor1_dir = 29
+motor1_stp = 31
+motor1_ena = 32
+GPIO.setup(motor1_dir, GPIO.OUT)
+GPIO.setup(motor1_stp, GPIO.OUT)
+GPIO.setup(motor1_ena, GPIO.OUT)
+updateEnableState1(True)
+
+# Motor1 for Up/Down Movement
+motor2_dir = 33
+motor2_stp = 35
+motor2_ena = 36
+GPIO.setup(motor2_dir, GPIO.OUT)
+GPIO.setup(motor2_stp, GPIO.OUT)
+GPIO.setup(motor2_ena, GPIO.OUT)
+updateEnableState2(True)
+
+# Motors Steps Per Revolution
+motor_spr = 200
+
+def driveMotor1(invert, speed, steps):
+	delay = 60*1000*1000 / motor_spr / speed
+	
+	if invert:
+		GPIO.output(motor1_dir, GPIO.HIGH)
+		
+		for x in range(steps):
+			GPIO.output(motor1_stp, GPIO.HIGH)
+			sleep(delay / 1000000)
+			GPIO.output(motor1_stp, GPIO.LOW)
+			sleep(delay / 1000000)
+	else:
+		GPIO.output(motor1_dir, GPIO.LOW)
+		
+		for x in range(steps):
+			GPIO.output(motor1_stp, GPIO.HIGH)
+			sleep(delay / 1000000)
+			GPIO.output(motor1_stp, GPIO.LOW)
+			sleep(delay / 1000000)
+	
+def driveMotor2(invert, speed, steps):
+	delay = 60*1000*1000 / motor_spr / speed
+	
+	if invert:
+		GPIO.output(motor2_dir, GPIO.HIGH)
+		
+		for x in range(steps):
+			GPIO.output(motor2_stp, GPIO.HIGH)
+			sleep(delay / 1000000)
+			GPIO.output(motor2_stp, GPIO.LOW)
+			sleep(delay / 1000000)
+	else:
+		GPIO.output(motor2_dir, GPIO.LOW)
+		
+		for x in range(steps):
+			GPIO.output(motor2_stp, GPIO.HIGH)
+			sleep(delay / 1000000)
+			GPIO.output(motor2_stp, GPIO.LOW)
+			sleep(delay / 1000000)
+			
+def updateEnableState1(enable):
+	if enable:
+		GPIO.output(motor1_ena, GPIO.LOW)
+	else:
+		GPIO.output(motor1_ena, GPIO.HIGH);
+
+def updateEnableState2(enable):
+	if enable:
+		GPIO.output(motor2_ena, GPIO.LOW)
+	else:
+		GPIO.output(motor2_ena, GPIO.HIGH);
+			
 def move_left():
   print("MOVE LEFT")
+  driveMotor1(False, 1000, 25)
 
 def move_right():
   print("MOVE RIGHT")
+  driveMotor1(True, 1000, 25)
   
 def move_up():
   print("MOVE UP")
+  driveMotor2(False, 1000, 25)
 
 def move_down():
   print("MOVE DOWN")
+  driveMotor2(True, 1000, 25)
   
 camera = PiCamera()
 
